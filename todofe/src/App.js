@@ -3,6 +3,7 @@ import axios from 'axios';
 import API_BASE_URL from './apiConfig';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
+import CalendarView from './components/CalendarView';
 import TodoFooter from './components/TodoFooter';
 
 function App() {
@@ -22,9 +23,14 @@ function App() {
     }
   };
 
-  const handleAddTodo = async (title) => {
+   const handleAddTodo = async (title, description, expirationDate) => {
     try {
-      const response = await axios.post(API_BASE_URL, { title, description: '', completed: false });
+      const response = await axios.post(API_BASE_URL, {
+        title,
+        description,
+        completed: false,
+        expirationDate,
+      });
       setTodos([...todos, response.data]);
     } catch (error) {
       console.error('Error adding todo:', error);
@@ -76,17 +82,38 @@ function App() {
     return true;
   });
 
+    
+  
+  const [view, setView] = useState('list');
+  
   return (
     <div className="container mt-4">
       <h1 className="text-center mb-4">Todo App</h1>
-      <TodoForm onAdd={handleAddTodo} />
-      <TodoList todos={filteredTodos} onToggle={handleToggleTodo} onDelete={handleDeleteTodo} onEdit={handleEditTodo} />
-      <TodoFooter
-        count={todos.filter((t) => !t.completed).length}
-        filter={filter}
-        setFilter={setFilter}
-        onClearCompleted={handleClearCompleted}
-      />
+      <button
+        className="btn btn-secondary mb-3"
+        onClick={() => setView(view === 'list' ? 'calendar' : 'list')}
+      >
+        Switch to {view === 'list' ? 'Calendar' : 'List'} View
+      </button>
+      {view === 'list' ? (
+        <>
+          <TodoForm onAdd={handleAddTodo} />
+          <TodoList
+            todos={filteredTodos}
+            onToggle={handleToggleTodo}
+            onDelete={handleDeleteTodo}
+            onEdit={handleEditTodo}
+          />
+          <TodoFooter
+            count={filteredTodos.length}
+            filter={filter}
+            setFilter={setFilter}
+            onClearCompleted={handleClearCompleted}
+          />
+        </>
+      ) : (
+        <CalendarView todos={todos} />
+      )}
     </div>
   );
 }

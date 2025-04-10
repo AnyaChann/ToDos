@@ -34,15 +34,19 @@ public class TodoController {
     public ToDo createTodo(@RequestBody CreateTodoRequest todoRequest) {
         ToDo todo = new ToDo();
         todo.setTitle(todoRequest.getTitle());
-        todo.setDescription(todoRequest.getDescription());
+        todo.setDescription(todoRequest.getDescription()); // Set description
         todo.setCompleted(todoRequest.isCompleted());
+        todo.setExpirationDate(todoRequest.getExpirationDate()); // Set expiration date
         return todoService.createTodo(todo);
     }
-
+    
     @PutMapping("/{id}")
     public ResponseEntity<ToDo> updateTodo(@PathVariable Long id, @RequestBody ToDo todoDetails) {
         try {
-            return ResponseEntity.ok(todoService.updateTodo(id, todoDetails));
+            ToDo updatedTodo = todoService.updateTodo(id, todoDetails);
+            updatedTodo.setDescription(todoDetails.getDescription()); // Update description
+            updatedTodo.setExpirationDate(todoDetails.getExpirationDate()); // Update expiration date
+            return ResponseEntity.ok(updatedTodo);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
