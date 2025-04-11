@@ -4,7 +4,7 @@ import "../styles/TodoList.css";
 const TodoList = ({ todos, onToggle, onDelete, onEdit, onComplete, onDeleteCompleted }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState("all"); // all, pending, completed, expired
-  const tasksPerPage = 8;
+  const tasksPerPage = 6;
 
   // Phân loại nhiệm vụ
   const filteredTodos = todos.filter((todo) => {
