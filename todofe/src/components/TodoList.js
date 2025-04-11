@@ -68,7 +68,7 @@ const TodoList = ({ todos, onToggle, onDelete, onEdit, onComplete }) => {
                 >
                   <strong>{getStatusText(todo)}</strong>
                 </p>
-                {!todo.completed && (
+                {!todo.completed && new Date(todo.expirationDate) >= new Date() && (
                   <button
                     className="btn btn-success btn-sm me-2"
                     onClick={() => onComplete(todo.id)}
@@ -88,7 +88,9 @@ const TodoList = ({ todos, onToggle, onDelete, onEdit, onComplete }) => {
                 <button
                   className="btn btn-danger btn-sm"
                   onClick={() => onDelete(todo.id)}
-                  disabled={todo.completed} // Disable nếu đã hoàn thành
+                  disabled={
+                    todo.completed || new Date(todo.expirationDate) < new Date()
+                  } // Disable nếu đã hoàn thành hoặc hết hạn
                 >
                   Delete
                 </button>

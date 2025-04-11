@@ -9,8 +9,6 @@ const TodoForm = ({ task, onSave, onClose }) => {
   const [tags, setTags] = useState("");
   const [error, setError] = useState(""); // State để lưu lỗi
 
-  // Removed duplicate declaration of getCurrentDateTime
-
   useEffect(() => {
     if (task) {
       // Nếu đang chỉnh sửa task, thiết lập giá trị từ task
@@ -34,7 +32,7 @@ const TodoForm = ({ task, onSave, onClose }) => {
     const expiration = new Date(expirationDate);
 
     // Validate ngày kết thúc không được trước ngày bắt đầu
-    if (expiration < start) {
+    if (!task && expiration < start) {
       setError("Expiration date cannot be earlier than start date.");
       return;
     }
@@ -45,14 +43,14 @@ const TodoForm = ({ task, onSave, onClose }) => {
       id: task?.id,
       title,
       description,
-      startDate,
+      startDate: task ? task.startDate : startDate, // Giữ nguyên startDate khi chỉnh sửa
       expirationDate,
       priority,
       tags,
     });
   };
 
-  // Lấy ngày và giờ hiện tại ở định dạng phù hợp cho thuộc tính `min` (Giờ Việt Nam)
+  // Lấy ngày và giờ hiện tại ở định dạng phù hợp cho thuộc tính `min`
   const getCurrentDateTime = () => {
     const now = new Date();
     const year = now.getFullYear();
@@ -60,7 +58,7 @@ const TodoForm = ({ task, onSave, onClose }) => {
     const date = String(now.getDate()).padStart(2, "0");
     const hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
-  
+
     return `${year}-${month}-${date}T${hours}:${minutes}`; // Định dạng: YYYY-MM-DDTHH:mm
   };
 
@@ -89,20 +87,23 @@ const TodoForm = ({ task, onSave, onClose }) => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              <input
-                type="datetime-local"
-                className="form-control mb-2"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                min={getCurrentDateTime()} // Ngăn chọn ngày trong quá khứ
-                required
-              />
+              {/* Ẩn trường startDate khi chỉnh sửa */}
+              {!task && (
+                <input
+                  type="datetime-local"
+                  className="form-control mb-2"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  min={getCurrentDateTime()} // Ngăn chọn ngày trong quá khứ
+                  required
+                />
+              )}
               <input
                 type="datetime-local"
                 className="form-control mb-2"
                 value={expirationDate}
                 onChange={(e) => setExpirationDate(e.target.value)}
-                min={startDate || getCurrentDateTime()} // Ngăn chọn ngày trước ngày bắt đầu
+                min={task ? task.startDate : startDate || getCurrentDateTime()} // Ngăn chọn ngày trước ngày bắt đầu
                 required
               />
               <select
