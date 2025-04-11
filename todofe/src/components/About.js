@@ -12,7 +12,7 @@ const About = () => {
       <ul>
         <li>📆 <strong>Calendar View:</strong> Visualize your tasks on a calendar to plan your schedule effectively.</li>
         <li>📒 <strong>Task List:</strong> Keep track of all your tasks, including their status (Pending, Completed, or Expired).</li>
-        <li>⚙️ <strong>Settings:</strong> Customize your experience by switching between Light and Dark themes.</li>
+        <li>⚙️ <strong>Settings:</strong> Customize your experience by switching between Light and Dark themes (Currentlly Not Working)</li>
         <li>ℹ️ <strong>About Page:</strong> Learn more about the application and its purpose.</li>
       </ul>
       <h2>Technology Stack</h2>

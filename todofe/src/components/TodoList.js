@@ -78,7 +78,7 @@ const TodoList = ({ todos, onToggle, onDelete, onEdit, onComplete, onDeleteCompl
           </button>
         </div>
         <div>
-          <strong>Active Tasks: {activeTasksCount}</strong>
+          <strong>Tasks Remaining: {activeTasksCount}</strong>
         </div>
       </div>
       <div className="row">
