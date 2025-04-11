@@ -1,0 +1,36 @@
+.about-container {
+  padding: 20px;
+  background-color: #f8f9fa; /* Light background */
+  color: #343a40; /* Dark text */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.about-container h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #007bff; /* Blue heading */
+}
+
+.about-container p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.about-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.about-container ul li {
+  margin: 10px 0;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.about-container ul li::before {
+  content: "✔️";
+  margin-right: 10px;
+  color: #28a745; /* Green checkmark */
+}

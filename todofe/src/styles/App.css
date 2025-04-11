@@ -3,18 +3,22 @@
   height: 100% !important;
 }
 
-.sidebar {
-  width: 250px;
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-right: 1px solid #ddd;
-}
-
 .main-content {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
 }
+
+/* Sidebar container */
+.sidebar-container {
+  width: 250px; /* Fixed width for the sidebar */
+  background-color: #343a40; /* Match sidebar background */
+  color: #fff;
+  height: 100vh; /* Full height */
+  overflow-y: auto; /* Scrollable if content overflows */
+}
+
+/* Main content area */
 
 .fab {
   position: fixed;

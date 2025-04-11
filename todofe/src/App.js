@@ -12,6 +12,7 @@ import TodoList from "./components/TodoList";
 import TodoForm from "./components/TodoForm";
 import API_BASE_URL from "./apiConfig";
 import "./styles/App.css";
+import About from "../src/components/About"; // Import the About component
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -85,7 +86,7 @@ function App() {
     }
   };
 
-    const handleDeleteCompletedOrExpired = () => {
+  const handleDeleteCompletedOrExpired = () => {
     setTodos((prevTodos) =>
       prevTodos.filter(
         (todo) =>
@@ -106,41 +107,48 @@ function App() {
 
   return (
     <Router>
-      <div className="container-fluid vh-100 d-flex flex-column">
-        <div className="row flex-grow-1">
-          <div className="col-md-3 col-lg-2 bg-primary text-white p-4 h-100">
-            <Sidebar />
-          </div>
-          <div className="col-md-9 col-lg-10 p-4 h-100 overflow-auto">
-            <Routes>
-              <Route path="/" element={<Navigate to="/calendar" />} />
-              <Route
-                path="/calendar"
-                element={<CalendarView tasks={todos} onTaskSelect={openForm} />}
-              />
-              <Route
-                path="/tasks"
-                element={
-                  <TodoList
-                    todos={todos}
-                    onEdit={openForm}
-                    onDelete={handleDeleteTodo}
-                    onComplete={handleCompleteTodo} // Pass the handler
-                    onDeleteCompletedOrExpired={handleDeleteCompletedOrExpired} // Pass the handler
-                  />
-                }
-              />
-            </Routes>
-          </div>
+      <div className="container-fluid vh-100 d-flex p-0">
+        {/* Sidebar */}
+        <div className="sidebar-container">
+          <Sidebar />
         </div>
+
+        {/* Main Content */}
+        <div className="main-content flex-grow-1">
+          <Routes>
+            <Route path="/" element={<Navigate to="/calendar" />} />
+            <Route
+              path="/calendar"
+              element={<CalendarView tasks={todos} onTaskSelect={openForm} />}
+            />
+            <Route
+              path="/tasks"
+              element={
+                <TodoList
+                  todos={todos}
+                  onEdit={openForm}
+                  onDelete={handleDeleteTodo}
+                  onComplete={handleCompleteTodo}
+                />
+              }
+            />
+            <Route path="/settings" element={<div>Settings Page</div>} />
+            <Route path="/about" element={<About />} /> {/* Add About route */}
+          </Routes>
+        </div>
+
+        {/* Floating Action Button */}
         <FloatingActionButton onClick={() => openForm()} />
-      </div>      {showForm && (
-        <TodoForm
-          task={editingTask}
-          onSave={handleSaveTodo}
-          onClose={closeForm}
-        />
-      )}
+
+        {/* Todo Form */}
+        {showForm && (
+          <TodoForm
+            task={editingTask}
+            onSave={handleSaveTodo}
+            onClose={closeForm}
+          />
+        )}
+      </div>
     </Router>
   );
 }

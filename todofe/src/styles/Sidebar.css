@@ -1,18 +1,54 @@
+/* Sidebar container */
+.sidebar {
+  background-color: #343a40; /* Dark background */
+  color: #fff; /* White text */
+  width: 250px; /* Fixed width */
+  padding: 20px;
+  border-right: 1px solid #495057; /* Subtle border */
+}
+
+/* Sidebar title */
+.sidebar h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #f8f9fa;
+}
+
+/* Sidebar navigation */
 .sidebar ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .sidebar ul li {
-  margin: 10px 0;
+  margin: 15px 0;
 }
 
 .sidebar ul li a {
   text-decoration: none;
-  color: #333;
+  color: #adb5bd; /* Light gray text */
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+  background-color: #495057; /* Darker background on hover */
+  color: #fff; /* White text on hover */
 }
 
 .sidebar ul li a.active-link {
+  background-color: #007bff; /* Blue background for active link */
+  color: #fff; /* White text for active link */
   font-weight: bold;
-  color: #007bff;
+}
+
+/* Icons in the sidebar */
+.sidebar ul li a i {
+  font-size: 1.5rem;
+  margin-right: 10px;
 }
