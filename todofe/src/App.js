@@ -85,6 +85,15 @@ function App() {
     }
   };
 
+    const handleDeleteCompletedOrExpired = () => {
+    setTodos((prevTodos) =>
+      prevTodos.filter(
+        (todo) =>
+          !(todo.completed || new Date(todo.expirationDate) < new Date())
+      )
+    );
+  };
+
   const openForm = (task = null) => {
     setEditingTask(task);
     setShowForm(true);
@@ -117,6 +126,7 @@ function App() {
                     onEdit={openForm}
                     onDelete={handleDeleteTodo}
                     onComplete={handleCompleteTodo} // Pass the handler
+                    onDeleteCompletedOrExpired={handleDeleteCompletedOrExpired} // Pass the handler
                   />
                 }
               />

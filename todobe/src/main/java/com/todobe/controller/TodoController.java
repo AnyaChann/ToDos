@@ -46,7 +46,6 @@ public class TodoController {
         todo.setDescription(todoRequest.getDescription());
         todo.setStartDate(todoRequest.getStartDate());
         todo.setExpirationDate(todoRequest.getExpirationDate());
-        todo.setPriority(todoRequest.getPriority());
         todo.setTags(todoRequest.getTags());
         return todoService.createTodo(todo);
     }
@@ -61,7 +60,6 @@ public class TodoController {
         existingTodo.setExpirationDate(todoDetails.getExpirationDate());
         existingTodo.setTitle(todoDetails.getTitle());
         existingTodo.setDescription(todoDetails.getDescription());
-        existingTodo.setPriority(todoDetails.getPriority());
         existingTodo.setTags(todoDetails.getTags());
     
         ToDo updatedTodo = todoService.updateTodo(id, existingTodo);

@@ -41,6 +41,7 @@
 
 /* Event styling */
 .rbc-event {
+  width: 40% !important;
   border-radius: 5px !important; /* Rounded corners for events */
   border: #bab9b9 1px solid !important; /* Dark border for events */
   padding: 5px !important;
@@ -76,4 +77,20 @@
 
 .rbc-day-bg:hover {
   background-color: #f5f5f5; /* Light gray on hover */
+}
+
+/* Custom colors for events */
+.rbc-event-completed {
+  background-color: #d4edda !important; /* Light green for completed tasks */
+  color: #155724 !important; /* Dark green text */
+}
+
+.rbc-event-expired {
+  background-color: #f8d7da !important; /* Light red for expired tasks */
+  color: #721c24 !important; /* Dark red text */
+}
+
+.rbc-event-pending {
+  background-color: #fff3cd !important; /* Light yellow for pending tasks */
+  color: #856404 !important; /* Dark yellow text */
 }

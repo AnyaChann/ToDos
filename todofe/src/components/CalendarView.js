@@ -7,7 +7,7 @@ import "../styles/CalendarView.css"; // Import custom CSS for modern styling
 const localizer = momentLocalizer(moment);
 
 const CalendarView = ({ tasks = [], onTaskSelect, onTaskDrop }) => {
-    const events = tasks.map((task) => ({
+  const events = tasks.map((task) => ({
     id: task.id, // Include task ID for identification
     title: task.title,
     start: new Date(task.startDate), // Use startDate
@@ -19,49 +19,33 @@ const CalendarView = ({ tasks = [], onTaskSelect, onTaskDrop }) => {
     completed: task.completed, // Include completed status
   }));
 
-    const eventStyleGetter = (event) => {
+  const eventStyleGetter = (event) => {
     let backgroundColor;
     let textColor = "#333"; // Default text color
-  
+
     if (event.completed) {
-      backgroundColor = "#d9d9d9"; // Light gray for completed tasks
-      textColor = "#6c757d"; 
+      backgroundColor = "#d4edda"; // Light green for completed tasks
+      textColor = "#155724"; // Dark green text
     } else if (new Date(event.end) < new Date()) {
       backgroundColor = "#f8d7da"; // Light red for expired tasks
-      textColor = "#721c24"; // Dark red text for expired tasks
-    }
-    if (event.completed) {
-      backgroundColor = "#d9d9d9"; // Light gray for completed tasks
-      textColor = "#6c757d"; 
-    } else if (new Date(event.end) < new Date()) {
-      backgroundColor = "#f8d7da"; // Light red for expired tasks
-      textColor = "#721c24"; // Dark red text for expired tasks
+      textColor = "#721c24"; // Dark red text
     } else {
-      // Apply priority-based colors for pending tasks
-      switch (event.priority) {
-        case "High":
-          backgroundColor = "#ffcccc"; // Pastel red
-          break;
-        case "Medium":
-          backgroundColor = "#fff4cc"; // Pastel yellow
-          break;
-        case "Low":
-          backgroundColor = "#ccffcc"; // Pastel green
-          break;
-        default:
-          backgroundColor = "#e6e6e6"; // Default gray
-      }
+      backgroundColor = "#fff3cd"; // Light yellow for pending tasks
+      textColor = "#856404"; // Dark yellow text
     }
 
     return {
       style: {
         backgroundColor,
         color: textColor,
-        borderRadius: "8px", // Rounded corners
-        border: "none", // Remove border
+        borderRadius: "8px",
+        border: "none",
         padding: "5px",
         fontSize: "0.9rem",
-        textDecoration: event.completed || new Date(event.end) < new Date() ? "line-through" : "none", // Add text decoration for expired tasks
+        textDecoration:
+          event.completed || new Date(event.end) < new Date()
+            ? "line-through"
+            : "none",
       },
     };
   };
@@ -77,7 +61,7 @@ const CalendarView = ({ tasks = [], onTaskSelect, onTaskDrop }) => {
         startAccessor="start"
         endAccessor="end"
         style={{ height: 600, borderRadius: "5px", overflow: "hidden" }}
-        onSelectEvent={() => {}} // Disable task selection
+        onSelectEvent={() => {}}
         onEventDrop={onTaskDrop}
         draggableAccessor={() => true}
         eventPropGetter={eventStyleGetter}

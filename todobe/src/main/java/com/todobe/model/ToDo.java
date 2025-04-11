@@ -13,16 +13,14 @@ public class ToDo {
     private String title;
     private String description;
     private boolean completed;
+
     @Column(name = "start_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime startDate;
 
     @Column(name = "expiration_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime expirationDate;
 
-    private String priority;
     private String tags;
-
-    
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -42,9 +40,6 @@ public class ToDo {
 
     public LocalDateTime getExpirationDate() { return expirationDate; }
     public void setExpirationDate(LocalDateTime expirationDate) { this.expirationDate = expirationDate; }
-
-    public String getPriority() { return priority; }
-    public void setPriority(String priority) { this.priority = priority; }
 
     public String getTags() { return tags; }
     public void setTags(String tags) { this.tags = tags; }

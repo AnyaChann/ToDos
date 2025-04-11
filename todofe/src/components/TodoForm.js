@@ -5,7 +5,6 @@ const TodoForm = ({ task, onSave, onClose }) => {
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
-  const [priority, setPriority] = useState("Low");
   const [tags, setTags] = useState("");
   const [error, setError] = useState(""); // State để lưu lỗi
 
@@ -16,7 +15,6 @@ const TodoForm = ({ task, onSave, onClose }) => {
       setDescription(task.description || "");
       setStartDate(task.startDate || "");
       setExpirationDate(task.expirationDate || "");
-      setPriority(task.priority || "Low");
       setTags(task.tags || "");
     } else {
       // Nếu tạo task mới, thiết lập startDate là ngày giờ hiện tại
@@ -45,7 +43,6 @@ const TodoForm = ({ task, onSave, onClose }) => {
       description,
       startDate: task ? task.startDate : startDate, // Giữ nguyên startDate khi chỉnh sửa
       expirationDate,
-      priority,
       tags,
     });
   };
@@ -72,7 +69,7 @@ const TodoForm = ({ task, onSave, onClose }) => {
           </div>
           <div className="modal-body">
             {error && <div className="alert alert-danger">{error}</div>} {/* Hiển thị lỗi */}
-            <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit}>
               <input
                 type="text"
                 className="form-control mb-2"
@@ -87,14 +84,13 @@ const TodoForm = ({ task, onSave, onClose }) => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              {/* Ẩn trường startDate khi chỉnh sửa */}
               {!task && (
                 <input
                   type="datetime-local"
                   className="form-control mb-2"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  min={getCurrentDateTime()} // Ngăn chọn ngày trong quá khứ
+                  min={getCurrentDateTime()}
                   required
                 />
               )}
@@ -103,18 +99,9 @@ const TodoForm = ({ task, onSave, onClose }) => {
                 className="form-control mb-2"
                 value={expirationDate}
                 onChange={(e) => setExpirationDate(e.target.value)}
-                min={task ? task.startDate : startDate || getCurrentDateTime()} // Ngăn chọn ngày trước ngày bắt đầu
+                min={task ? task.startDate : startDate || getCurrentDateTime()}
                 required
               />
-              <select
-                className="form-control mb-2"
-                value={priority}
-                onChange={(e) => setPriority(e.target.value)}
-              >
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-              </select>
               <input
                 type="text"
                 className="form-control mb-2"

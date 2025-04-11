@@ -1,56 +1,54 @@
-/* Màu nền cho các mức ưu tiên */
-.card-high-priority {
-  background-color: #ffcccc !important; /* Pastel red */
-  border: 1px solid #ff6666 !important;
-}
-
-.card-medium-priority {
-  background-color: #fff4cc !important; /* Pastel yellow */
-  border: 1px solid #ffcc66 !important;
-}
-
-.card-low-priority {
-  background-color: #ccffcc !important; /* Pastel green */
-  border: 1px solid #66cc66 !important;
-}
-
-.card-default-priority {
-  background-color: #e6e6e6 !important; /* Default gray */
-  border: 1px solid #cccccc !important;
-}
-
-/* Màu nền cho nhiệm vụ đã hoàn thành */
-.card-completed {
-  background-color: #d9d9d9 !important; /* Light gray */
-  border: 1px solid #b3b3b3 !important;
-  color: #6c757d; /* Muted text */
-}
-
-/* Màu nền cho nhiệm vụ đã hết hạn */
-.card-expired {
-  background-color: #f8d7da !important; /* Light red */
-  border: 1px solid #f5c6cb !important;
-  color: #721c24; /* Dark red text */
-}
-
 /* Màu sắc cho trạng thái */
-.status-completed {
-  color: #28a745; /* Green for completed tasks */
-  font-weight: bold;
+.card-completed {
+  background-color: #d4edda !important; /* Green for completed tasks */
+  border: 1px solid #c3e6cb !important;
+  color: #155724 !important; /* Dark green text */
+  text-decoration: line-through !important; /* Gạch ngang */
 }
 
-.status-expired {
-  color: #dc3545; /* Red for expired tasks */
-  font-weight: bold;
+.card-pending {
+  background-color: #fff3cd !important; /* Yellow for pending tasks */
+  border: 1px solid #ffeeba !important;
+  color: #856404 !important; /* Dark yellow text */
 }
 
-.status-pending {
-  color: #ffc107; /* Yellow for pending tasks */
-  font-weight: bold;
+.card-expired {
+  background-color: #f8d7da !important; /* Gray for expired tasks */
+  border: 1px solid #f5c6cb !important;
+  color: #721c24 !important; /* Dark red text */
+  text-decoration: line-through !important; /* Gạch ngang */
 }
 
-/* Gạch ngang tiêu đề nhiệm vụ đã hoàn thành */
-.text-decoration-line-through {
-  text-decoration: line-through !important;
-  color: #6c757d !important; /* Muted text */
+/* Đảm bảo các card có kích thước đồng đều */
+.card {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination button:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
 }

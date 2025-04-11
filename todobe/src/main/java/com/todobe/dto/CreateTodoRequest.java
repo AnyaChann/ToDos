@@ -8,7 +8,6 @@ public class CreateTodoRequest {
     private boolean completed;
     private LocalDateTime startDate;
     private LocalDateTime expirationDate;
-    private String priority;
     private String tags;
 
     // Getters and Setters
@@ -50,14 +49,6 @@ public class CreateTodoRequest {
 
     public void setExpirationDate(LocalDateTime expirationDate) {
         this.expirationDate = expirationDate;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
     }
 
     public String getTags() {
