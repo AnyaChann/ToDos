@@ -1,0 +1,42 @@
+/* High Priority - Pastel Red */
+.card-high-priority {
+  background-color: #ffe5e5; /* Light pastel red */
+  color: #b71c1c; /* Dark red for text */
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Medium Priority - Pastel Yellow */
+.card-medium-priority {
+  background-color: #fff9e6; /* Light pastel yellow */
+  color: #e65100; /* Dark orange for text */
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Low Priority - Pastel Green */
+.card-low-priority {
+  background-color: #e8f5e9; /* Light pastel green */
+  color: #1b5e20; /* Dark green for text */
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Default Priority - Light Gray */
+.card-default-priority {
+  background-color: #f5f5f5; /* Light gray */
+  color: #424242; /* Dark gray for text */
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Add hover effect for cards */
+.card:hover {
+  transform: translateY(-5px); /* Slight lift on hover */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}

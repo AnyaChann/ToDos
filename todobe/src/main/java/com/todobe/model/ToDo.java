@@ -11,18 +11,18 @@ public class ToDo {
     private Long id;
 
     private String title;
-
-    private String description; // Field for description
-
+    private String description;
     private boolean completed;
+    @Column(name = "start_date", columnDefinition = "TIMESTAMP")
+    private LocalDateTime startDate;
 
-    private LocalDateTime startDate; // New field for start date
+    @Column(name = "expiration_date", columnDefinition = "TIMESTAMP")
+    private LocalDateTime expirationDate;
 
-    private LocalDateTime expirationDate; // Field for expiration date and time
+    private String priority;
+    private String tags;
 
-    private String priority; // Field for priority (Low, Medium, High)
-
-    private String tags; // Field for tags or categories
+    
 
     // Getters and Setters
     public Long getId() { return id; }

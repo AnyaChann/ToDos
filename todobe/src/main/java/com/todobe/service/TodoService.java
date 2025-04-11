@@ -29,12 +29,9 @@ public class TodoService {
         return todoRepository.save(todo);
     }
 
-    public ToDo updateTodo(Long id, ToDo todoDetails) {
-        ToDo todo = todoRepository.findById(id).orElseThrow(() -> new RuntimeException("Todo not found"));
-        todo.setTitle(todoDetails.getTitle());
-        todo.setDescription(todoDetails.getDescription());
-        todo.setCompleted(todoDetails.isCompleted());
-        return todoRepository.save(todo);
+    public ToDo updateTodo(Long id, ToDo updatedTodo) {
+        // Lưu task đã cập nhật
+        return todoRepository.save(updatedTodo);
     }
     
     @Transactional

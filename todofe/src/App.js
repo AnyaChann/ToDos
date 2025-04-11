@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Sidebar from "./components/Sidebar";
+import FloatingActionButton from "./components/FloatingActionButton";
 import CalendarView from "./components/CalendarView";
 import TodoList from "./components/TodoList";
 import TodoForm from "./components/TodoForm";
@@ -9,8 +15,8 @@ import "./styles/App.css";
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [showTaskPopup, setShowTaskPopup] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     fetchTodos();
@@ -26,108 +32,105 @@ function App() {
     }
   };
 
-  const handleAddTodo = async (task) => {
+  const handleSaveTodo = async (task) => {
     try {
-      const response = await fetch(API_BASE_URL, {
-        method: "POST",
+      const method = task.id ? "PUT" : "POST";
+      const url = task.id ? `${API_BASE_URL}/${task.id}` : API_BASE_URL;
+
+      const response = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(task),
       });
-      const newTask = await response.json();
-      setTodos([...todos, newTask]);
+
+      const savedTask = await response.json();
+
+      if (task.id) {
+        // Update existing task
+        setTodos((prevTodos) =>
+          prevTodos.map((todo) => (todo.id === task.id ? savedTask : todo))
+        );
+      } else {
+        // Add new task
+        setTodos((prevTodos) => [...prevTodos, savedTask]);
+      }
+
+      setShowForm(false);
     } catch (error) {
-      console.error("Error adding todo:", error);
+      console.error("Error saving todo:", error);
     }
   };
 
-  const handleEditTodo = async (id, updatedTask) => {
+  const handleCompleteTodo = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedTask),
+      const response = await fetch(`${API_BASE_URL}/${id}/complete`, {
+        method: "PATCH",
       });
-      const updatedTodo = await response.json();
-      setTodos(todos.map((todo) => (todo.id === id ? updatedTodo : todo)));
+      const updatedTask = await response.json();
+
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) => (todo.id === id ? updatedTask : todo))
+      );
     } catch (error) {
-      console.error("Error editing todo:", error);
+      console.error("Error marking task as completed:", error);
     }
   };
 
   const handleDeleteTodo = async (id) => {
     try {
       await fetch(`${API_BASE_URL}/${id}`, { method: "DELETE" });
-      setTodos(todos.filter((todo) => todo.id !== id));
+      setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
     } catch (error) {
       console.error("Error deleting todo:", error);
     }
   };
 
-  const openTaskPopup = (task = null) => {
+  const openForm = (task = null) => {
     setEditingTask(task);
-    setShowTaskPopup(true);
+    setShowForm(true);
   };
 
-  const closeTaskPopup = () => {
+  const closeForm = () => {
     setEditingTask(null);
-    setShowTaskPopup(false);
+    setShowForm(false);
   };
 
   return (
     <Router>
-      <div className="app-container">
-        <Sidebar />
-        <div className="main-content">
-          <Routes>
-            <Route path="/" element={<Navigate to="/calendar" />} />
-            <Route
-              path="/calendar"
-              element={
-                <CalendarView
-                  tasks={todos}
-                  onTaskSelect={openTaskPopup}
-                  onTaskDrop={(event) => {
-                    const updatedTask = { ...event, expirationDate: event.start };
-                    handleEditTodo(event.id, updatedTask);
-                  }}
-                />
-              }
-            />
-            <Route
-              path="/tasks"
-              element={
-                <TodoList
-                  todos={todos}
-                  onToggle={(id) =>
-                    handleEditTodo(id, {
-                      ...todos.find((todo) => todo.id === id),
-                      completed: !todos.find((todo) => todo.id === id).completed,
-                    })
-                  }
-                  onDelete={handleDeleteTodo}
-                  onEdit={openTaskPopup}
-                />
-              }
-            />
-            <Route path="/settings" element={<div>Settings Page</div>} />
-          </Routes>
-
-          {showTaskPopup && (
-            <TodoForm
-              task={editingTask}
-              onSave={(task) => {
-                if (editingTask) {
-                  handleEditTodo(editingTask.id, task);
-                } else {
-                  handleAddTodo(task);
+      <div className="container-fluid vh-100 d-flex flex-column">
+        <div className="row flex-grow-1">
+          <div className="col-md-3 col-lg-2 bg-primary text-white p-4 h-100">
+            <Sidebar />
+          </div>
+          <div className="col-md-9 col-lg-10 p-4 h-100 overflow-auto">
+            <Routes>
+              <Route path="/" element={<Navigate to="/calendar" />} />
+              <Route
+                path="/calendar"
+                element={<CalendarView tasks={todos} onTaskSelect={openForm} />}
+              />
+              <Route
+                path="/tasks"
+                element={
+                  <TodoList
+                    todos={todos}
+                    onEdit={openForm}
+                    onDelete={handleDeleteTodo}
+                    onComplete={handleCompleteTodo} // Pass the handler
+                  />
                 }
-                closeTaskPopup();
-              }}
-              onClose={closeTaskPopup}
-            />
-          )}
+              />
+            </Routes>
+          </div>
         </div>
-      </div>
+        <FloatingActionButton onClick={() => openForm()} />
+      </div>      {showForm && (
+        <TodoForm
+          task={editingTask}
+          onSave={handleSaveTodo}
+          onClose={closeForm}
+        />
+      )}
     </Router>
   );
 }
