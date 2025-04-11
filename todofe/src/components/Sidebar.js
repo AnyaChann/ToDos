@@ -1,11 +1,16 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "../styles/Sidebar.css"; // Import the updated CSS
+import logo from "../assets/logo.png"; // Import the logo image
 
 const Sidebar = () => {
   return (
     <div className="sidebar d-flex flex-column h-100 p-3">
-      <h3 className="text-center mb-4">My Tasks</h3>
+      {/* Logo Section */}
+      <div className="logo-container text-center mb-4">
+        <img src={logo} alt="ToDos Logo" className="sidebar-logo" />
+      </div>
+      {/* Navigation Links */}
       <ul className="nav flex-column">
         <li className="nav-item">
           <NavLink to="/calendar" className="nav-link" activeClassName="active-link">

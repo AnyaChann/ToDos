@@ -50,6 +50,7 @@ const TodoForm = ({ task, onSave, onClose }) => {
   // Lấy ngày và giờ hiện tại ở định dạng phù hợp cho thuộc tính `min`
   const getCurrentDateTime = () => {
     const now = new Date();
+    now.setMinutes(now.getMinutes() - 10); // Cho phép quay lại tối đa 10 phút
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
     const date = String(now.getDate()).padStart(2, "0");
@@ -69,7 +70,7 @@ const TodoForm = ({ task, onSave, onClose }) => {
           </div>
           <div className="modal-body">
             {error && <div className="alert alert-danger">{error}</div>} {/* Hiển thị lỗi */}
-                        <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
               <input
                 type="text"
                 className="form-control mb-2"
@@ -90,7 +91,7 @@ const TodoForm = ({ task, onSave, onClose }) => {
                   className="form-control mb-2"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  min={getCurrentDateTime()}
+                  min={getCurrentDateTime()} // Cho phép quay lại tối đa 10 phút
                   required
                 />
               )}

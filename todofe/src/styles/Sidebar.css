@@ -1,6 +1,6 @@
 /* Sidebar container */
 .sidebar {
-  background-color: #343a40; /* Dark background */
+  background-color: #292828; /* Dark background */
   color: #fff; /* White text */
   width: 250px; /* Fixed width */
   padding: 20px;
@@ -9,7 +9,7 @@
 
 /* Sidebar title */
 .sidebar h3 {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
   color: #f8f9fa;
 }
@@ -51,4 +51,16 @@
 .sidebar ul li a i {
   font-size: 1.5rem;
   margin-right: 10px;
+}
+
+/* Logo styling */
+.logo-container {
+  text-align: center;
+}
+
+.sidebar-logo {
+  width: 100px; /* Adjust the size of the logo */
+  height: auto;
+  margin-bottom: 10px;
+  border-radius: 50%; /* Optional: Make the logo circular */
 }
