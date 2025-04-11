@@ -41,7 +41,6 @@
 
 /* Event styling */
 .rbc-event {
-  width: 40% !important;
   border-radius: 5px !important; /* Rounded corners for events */
   border: #bab9b9 1px solid !important; /* Dark border for events */
   padding: 5px !important;
