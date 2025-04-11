@@ -1,0 +1,30 @@
+.setting-container {
+  padding: 20px;
+  background-color: #f8f9fa; /* Light background */
+  color: #343a40; /* Dark text */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.setting-container h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #007bff; /* Blue heading */
+}
+
+.language-setting {
+  margin-top: 20px;
+}
+
+.language-setting label {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.language-setting select {
+  padding: 5px 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}

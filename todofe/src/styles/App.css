@@ -41,3 +41,29 @@
 .fab:hover {
   background-color: #0056b3;
 }
+
+/* Default theme (light) */
+.app-container.light {
+  background-color: #f8f9fa; /* Light background */
+  color: #343a40; /* Dark text */
+}
+
+/* Dark theme */
+.app-container.dark {
+  background-color: #343a40; /* Dark background */
+  color: #f8f9fa; /* Light text */
+}
+
+/* Sidebar adjustments for dark theme */
+.app-container.dark .sidebar {
+  background-color: #212529; /* Darker sidebar */
+  color: #adb5bd; /* Light gray text */
+}
+
+.app-container.dark .sidebar a {
+  color: #adb5bd; /* Light gray links */
+}
+
+.app-container.dark .sidebar a:hover {
+  color: #fff; /* White text on hover */
+}

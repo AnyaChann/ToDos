@@ -13,11 +13,18 @@ import TodoForm from "./components/TodoForm";
 import API_BASE_URL from "./apiConfig";
 import "./styles/App.css";
 import About from "../src/components/About"; // Import the About component
+import Setting from "./components/Setting"; // Import the Setting component
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light"); // Load theme from localStorage
+
+  const handleThemeChange = (newTheme) => {
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme); // Save theme to localStorage
+  };
 
   useEffect(() => {
     fetchTodos();
@@ -132,7 +139,15 @@ function App() {
                 />
               }
             />
-            <Route path="/settings" element={<div>Settings Page</div>} />
+            <Route
+              path="/settings"
+              element={
+                <Setting
+                  onThemeChange={handleThemeChange}
+                  currentTheme={theme}
+                />
+              }
+            />
             <Route path="/about" element={<About />} /> {/* Add About route */}
           </Routes>
         </div>
