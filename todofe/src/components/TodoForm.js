@@ -7,26 +7,40 @@ const TodoForm = ({ task, onSave, onClose }) => {
   const [expirationDate, setExpirationDate] = useState("");
   const [priority, setPriority] = useState("Low");
   const [tags, setTags] = useState("");
+  const [error, setError] = useState(""); // State để lưu lỗi
+
+  // Removed duplicate declaration of getCurrentDateTime
 
   useEffect(() => {
     if (task) {
+      // Nếu đang chỉnh sửa task, thiết lập giá trị từ task
       setTitle(task.title || "");
       setDescription(task.description || "");
       setStartDate(task.startDate || "");
       setExpirationDate(task.expirationDate || "");
       setPriority(task.priority || "Low");
       setTags(task.tags || "");
+    } else {
+      // Nếu tạo task mới, thiết lập startDate là ngày giờ hiện tại
+      setStartDate(getCurrentDateTime());
     }
   }, [task]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (new Date(expirationDate) < new Date(startDate)) {
-      alert("Expiration date cannot be earlier than start date.");
+    const now = new Date();
+    const start = new Date(startDate);
+    const expiration = new Date(expirationDate);
+
+    // Validate ngày kết thúc không được trước ngày bắt đầu
+    if (expiration < start) {
+      setError("Expiration date cannot be earlier than start date.");
       return;
     }
 
+    // Nếu không có lỗi, reset lỗi và gọi hàm onSave
+    setError("");
     onSave({
       id: task?.id,
       title,
@@ -38,6 +52,18 @@ const TodoForm = ({ task, onSave, onClose }) => {
     });
   };
 
+  // Lấy ngày và giờ hiện tại ở định dạng phù hợp cho thuộc tính `min` (Giờ Việt Nam)
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
+    const date = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+  
+    return `${year}-${month}-${date}T${hours}:${minutes}`; // Định dạng: YYYY-MM-DDTHH:mm
+  };
+
   return (
     <div className="modal show d-block" tabIndex="-1">
       <div className="modal-dialog">
@@ -47,6 +73,7 @@ const TodoForm = ({ task, onSave, onClose }) => {
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <div className="modal-body">
+            {error && <div className="alert alert-danger">{error}</div>} {/* Hiển thị lỗi */}
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
@@ -67,6 +94,7 @@ const TodoForm = ({ task, onSave, onClose }) => {
                 className="form-control mb-2"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
+                min={getCurrentDateTime()} // Ngăn chọn ngày trong quá khứ
                 required
               />
               <input
@@ -74,6 +102,7 @@ const TodoForm = ({ task, onSave, onClose }) => {
                 className="form-control mb-2"
                 value={expirationDate}
                 onChange={(e) => setExpirationDate(e.target.value)}
+                min={startDate || getCurrentDateTime()} // Ngăn chọn ngày trước ngày bắt đầu
                 required
               />
               <select
