@@ -1,54 +1,59 @@
-import React from "react";
-import { motion } from "framer-motion";
-import moment from "moment";
+import React, { useState } from "react";
+import "../styles/TaskPopup.css"; // Import your CSS file for styling
 
-const TaskPopup = ({ selectedDate, todos, onAdd, onEdit, onDelete, onClose }) => {
+const TaskPopup = ({ task, onSave, onClose }) => {
+  const [title, setTitle] = useState(task?.title || "");
+  const [description, setDescription] = useState(task?.description || "");
+  const [dateTime, setDateTime] = useState(task?.dateTime || "");
+  const [priority, setPriority] = useState(task?.priority || "Low");
+  const [tags, setTags] = useState(task?.tags || "");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave({ title, description, dateTime, priority, tags });
+    onClose();
+  };
+
   return (
-    <div className="popup-container" onClick={(e) => e.target.className === "popup-container" && onClose()}>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        transition={{ duration: 0.3 }}
-        className="popup-content"
-      >
-        <h4>Tasks for {moment(selectedDate).format("MMMM Do YYYY")}</h4>
-        <ul className="list-group">
-          {todos.map((todo) => (
-            <li
-              key={todo.id}
-              className="list-group-item d-flex justify-content-between align-items-center"
-            >
-              <div>
-                <strong>{todo.title}</strong>: {todo.description}
-              </div>
-              <div>
-                <button
-                  className="btn btn-primary btn-sm me-2"
-                  onClick={() => onEdit(todo)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => onDelete(todo.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <button
-          className="btn btn-success mt-3"
-          onClick={() => onAdd(selectedDate)}
-        >
-          Add Task
-        </button>
-        <button className="btn btn-secondary mt-3" onClick={onClose}>
-          Close
-        </button>
-      </motion.div>
+    <div className="popup-container">
+      <div className="popup-content">
+        <h3>{task ? "Edit Task" : "New Task"}</h3>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+          <textarea
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <input
+            type="datetime-local"
+            value={dateTime}
+            onChange={(e) => setDateTime(e.target.value)}
+            required
+          />
+          <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+          <input
+            type="text"
+            placeholder="Tags (comma-separated)"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+          />
+          <button type="submit">Save</button>
+          <button type="button" onClick={onClose}>
+            Cancel
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -34,9 +35,12 @@ public class TodoController {
     public ToDo createTodo(@RequestBody CreateTodoRequest todoRequest) {
         ToDo todo = new ToDo();
         todo.setTitle(todoRequest.getTitle());
-        todo.setDescription(todoRequest.getDescription()); // Set description
+        todo.setDescription(todoRequest.getDescription());
         todo.setCompleted(todoRequest.isCompleted());
-        todo.setExpirationDate(todoRequest.getExpirationDate()); // Set expiration date
+        todo.setStartDate(todoRequest.getStartDate() != null ? todoRequest.getStartDate() : LocalDateTime.now()); // Default to current date
+        todo.setExpirationDate(todoRequest.getExpirationDate());
+        todo.setPriority(todoRequest.getPriority());
+        todo.setTags(todoRequest.getTags());
         return todoService.createTodo(todo);
     }
     
@@ -44,7 +48,7 @@ public class TodoController {
     public ResponseEntity<ToDo> updateTodo(@PathVariable Long id, @RequestBody ToDo todoDetails) {
         try {
             ToDo updatedTodo = todoService.updateTodo(id, todoDetails);
-            updatedTodo.setDescription(todoDetails.getDescription()); // Update description
+            updatedTodo.setStartDate(todoDetails.getStartDate()); // Update start date
             updatedTodo.setExpirationDate(todoDetails.getExpirationDate()); // Update expiration date
             return ResponseEntity.ok(updatedTodo);
         } catch (RuntimeException e) {

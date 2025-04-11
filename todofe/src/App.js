@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import TodoForm from "./components/TodoForm";
-import TodoList from "./components/TodoList";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
 import CalendarView from "./components/CalendarView";
+import TodoList from "./components/TodoList";
+import TodoForm from "./components/TodoForm";
 import API_BASE_URL from "./apiConfig";
+import "./styles/App.css";
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [view, setView] = useState("calendar");
+  const [showTaskPopup, setShowTaskPopup] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
 
   useEffect(() => {
     fetchTodos();
@@ -15,33 +18,37 @@ function App() {
 
   const fetchTodos = async () => {
     try {
-      const response = await axios.get(API_BASE_URL);
-      setTodos(response.data);
+      const response = await fetch(API_BASE_URL);
+      const data = await response.json();
+      setTodos(data);
     } catch (error) {
       console.error("Error fetching todos:", error);
     }
   };
 
-  const handleAddTodo = async (title, description, expirationDate) => {
+  const handleAddTodo = async (task) => {
     try {
-      const response = await axios.post(API_BASE_URL, {
-        title,
-        description,
-        completed: false,
-        expirationDate,
+      const response = await fetch(API_BASE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(task),
       });
-      setTodos([...todos, response.data]);
+      const newTask = await response.json();
+      setTodos([...todos, newTask]);
     } catch (error) {
       console.error("Error adding todo:", error);
     }
   };
 
-  const handleEditTodo = async (id, updatedTodo) => {
+  const handleEditTodo = async (id, updatedTask) => {
     try {
-      const response = await axios.put(`${API_BASE_URL}/${id}`, updatedTodo);
-      setTodos(
-        todos.map((todo) => (todo.id === id ? response.data : todo))
-      );
+      const response = await fetch(`${API_BASE_URL}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedTask),
+      });
+      const updatedTodo = await response.json();
+      setTodos(todos.map((todo) => (todo.id === id ? updatedTodo : todo)));
     } catch (error) {
       console.error("Error editing todo:", error);
     }
@@ -49,45 +56,79 @@ function App() {
 
   const handleDeleteTodo = async (id) => {
     try {
-      await axios.delete(`${API_BASE_URL}/${id}`);
-      setTodos(todos.filter((todo) => todo.id !== id)); 
+      await fetch(`${API_BASE_URL}/${id}`, { method: "DELETE" });
+      setTodos(todos.filter((todo) => todo.id !== id));
     } catch (error) {
       console.error("Error deleting todo:", error);
     }
   };
 
+  const openTaskPopup = (task = null) => {
+    setEditingTask(task);
+    setShowTaskPopup(true);
+  };
+
+  const closeTaskPopup = () => {
+    setEditingTask(null);
+    setShowTaskPopup(false);
+  };
+
   return (
-    <div className="container mt-4">
-      <h1 className="text-center mb-4">Todo App</h1>
-      {view === "calendar" ? (
-        <CalendarView
-          todos={todos}
-          onAdd={handleAddTodo}
-          onEdit={handleEditTodo}
-          onDelete={handleDeleteTodo}
-        />
-      ) : (
-        <>
-          <TodoForm onAdd={handleAddTodo} />
-          <TodoList
-            todos={todos}
-            onToggle={(id) =>
-              handleEditTodo(id, {
-                ...todos.find((todo) => todo.id === id),
-                completed: !todos.find((todo) => todo.id === id).completed,
-              })
-            }
-            onDelete={handleDeleteTodo}
-          />
-        </>
-      )}
-      <button
-        className="btn btn-secondary mt-3"
-        onClick={() => setView(view === "calendar" ? "list" : "calendar")}
-      >
-        Switch to {view === "calendar" ? "List" : "Calendar"} View
-      </button>
-    </div>
+    <Router>
+      <div className="app-container">
+        <Sidebar />
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<Navigate to="/calendar" />} />
+            <Route
+              path="/calendar"
+              element={
+                <CalendarView
+                  tasks={todos}
+                  onTaskSelect={openTaskPopup}
+                  onTaskDrop={(event) => {
+                    const updatedTask = { ...event, expirationDate: event.start };
+                    handleEditTodo(event.id, updatedTask);
+                  }}
+                />
+              }
+            />
+            <Route
+              path="/tasks"
+              element={
+                <TodoList
+                  todos={todos}
+                  onToggle={(id) =>
+                    handleEditTodo(id, {
+                      ...todos.find((todo) => todo.id === id),
+                      completed: !todos.find((todo) => todo.id === id).completed,
+                    })
+                  }
+                  onDelete={handleDeleteTodo}
+                  onEdit={openTaskPopup}
+                />
+              }
+            />
+            <Route path="/settings" element={<div>Settings Page</div>} />
+          </Routes>
+
+          {showTaskPopup && (
+            <TodoForm
+              task={editingTask}
+              onSave={(task) => {
+                if (editingTask) {
+                  handleEditTodo(editingTask.id, task);
+                } else {
+                  handleAddTodo(task);
+                }
+                closeTaskPopup();
+              }}
+              onClose={closeTaskPopup}
+            />
+          )}
+        </div>
+      </div>
+    </Router>
   );
 }
 

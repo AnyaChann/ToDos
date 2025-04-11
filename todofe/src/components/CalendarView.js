@@ -1,45 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import TaskPopup from "./TaskPopup";
-import "../styles/CalendarView.css"; 
+import "../styles/CalendarView.css"; // Import your CSS file for styling
 
 const localizer = momentLocalizer(moment);
 
-const CalendarView = ({ todos, onAdd, onEdit, onDelete }) => {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [filteredTodos, setFilteredTodos] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
-
-  const handleSelectDate = (date) => {
-    const today = new Date();
-    if (date < today.setHours(0, 0, 0, 0)) {
-      alert("Cannot select past dates.");
-      return;
-    }
-    setSelectedDate(date);
-    const tasksForDate = todos.filter((todo) =>
-      moment(todo.expirationDate).isSame(date, "day")
-    );
-    setFilteredTodos(tasksForDate);
-    setShowPopup(true);
-  };
-
-  const closePopup = () => {
-    setShowPopup(false);
-  };
-
-  const events = todos.map((todo) => ({
-    title: todo.title,
-    start: new Date(todo.expirationDate),
-    end: new Date(todo.expirationDate),
+const CalendarView = ({ tasks = [], onTaskSelect, onTaskDrop }) => {
+    const events = tasks.map((task) => ({
+    title: task.title,
+    start: new Date(task.startDate), // Use startDate
+    end: new Date(task.expirationDate), // Use expirationDate
     allDay: false,
-    color: todo.completed
-      ? "green"
-      : moment(todo.expirationDate).isBefore(new Date())
-      ? "gray"
-      : "red",
+    color: task.priority === "High" ? "red" : task.priority === "Medium" ? "orange" : "green",
   }));
 
   const eventStyleGetter = (event) => {
@@ -50,27 +23,18 @@ const CalendarView = ({ todos, onAdd, onEdit, onDelete }) => {
   };
 
   return (
-    <div>
+    <div className="calendar-view">
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
         style={{ height: 600 }}
-        onSelectSlot={(slotInfo) => handleSelectDate(slotInfo.start)}
-        selectable
+        onSelectEvent={onTaskSelect}
+        onEventDrop={onTaskDrop}
+        draggableAccessor={() => true}
         eventPropGetter={eventStyleGetter}
       />
-      {showPopup && (
-        <TaskPopup
-          selectedDate={selectedDate}
-          todos={filteredTodos}
-          onAdd={onAdd}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onClose={closePopup}
-        />
-      )}
     </div>
   );
 };
