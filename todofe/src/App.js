@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import API_BASE_URL from './apiConfig';
-import TodoForm from './components/TodoForm';
-import TodoList from './components/TodoList';
-import CalendarView from './components/CalendarView';
-import TodoFooter from './components/TodoFooter';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import TodoForm from "./components/TodoForm";
+import TodoList from "./components/TodoList";
+import CalendarView from "./components/CalendarView";
+import API_BASE_URL from "./apiConfig";
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [filter, setFilter] = useState('all');
+  const [view, setView] = useState("calendar");
 
   useEffect(() => {
     fetchTodos();
@@ -19,11 +18,11 @@ function App() {
       const response = await axios.get(API_BASE_URL);
       setTodos(response.data);
     } catch (error) {
-      console.error('Error fetching todos:', error);
+      console.error("Error fetching todos:", error);
     }
   };
 
-   const handleAddTodo = async (title, description, expirationDate) => {
+  const handleAddTodo = async (title, description, expirationDate) => {
     try {
       const response = await axios.post(API_BASE_URL, {
         title,
@@ -33,87 +32,61 @@ function App() {
       });
       setTodos([...todos, response.data]);
     } catch (error) {
-      console.error('Error adding todo:', error);
+      console.error("Error adding todo:", error);
     }
   };
 
-  const handleToggleTodo = async (id) => {
-    const todo = todos.find((t) => t.id === id);
+  const handleEditTodo = async (id, updatedTodo) => {
     try {
-      const response = await axios.put(`${API_BASE_URL}/${id}`, { ...todo, completed: !todo.completed });
-      setTodos(todos.map((t) => (t.id === id ? response.data : t)));
+      const response = await axios.put(`${API_BASE_URL}/${id}`, updatedTodo);
+      setTodos(
+        todos.map((todo) => (todo.id === id ? response.data : todo))
+      );
     } catch (error) {
-      console.error('Error toggling todo:', error);
-    }
-  };
-
-  const handleEditTodo = async (id, title) => {
-    const todo = todos.find((t) => t.id === id);
-    try {
-      const response = await axios.put(`${API_BASE_URL}/${id}`, { ...todo, title });
-      setTodos(todos.map((t) => (t.id === id ? response.data : t)));
-    } catch (error) {
-      console.error('Error editing todo:', error);
+      console.error("Error editing todo:", error);
     }
   };
 
   const handleDeleteTodo = async (id) => {
     try {
       await axios.delete(`${API_BASE_URL}/${id}`);
-      setTodos(todos.filter((t) => t.id !== id));
+      setTodos(todos.filter((todo) => todo.id !== id)); 
     } catch (error) {
-      console.error('Error deleting todo:', error);
+      console.error("Error deleting todo:", error);
     }
   };
 
-  const handleClearCompleted = async () => {
-    const completedTodos = todos.filter((t) => t.completed);
-    try {
-      await Promise.all(completedTodos.map((t) => axios.delete(`${API_BASE_URL}/${t.id}`)));
-      setTodos(todos.filter((t) => !t.completed));
-    } catch (error) {
-      console.error('Error clearing completed todos:', error);
-    }
-  };
-
-  const filteredTodos = todos.filter((todo) => {
-    if (filter === 'active') return !todo.completed;
-    if (filter === 'completed') return todo.completed;
-    return true;
-  });
-
-    
-  
-  const [view, setView] = useState('list');
-  
   return (
     <div className="container mt-4">
       <h1 className="text-center mb-4">Todo App</h1>
-      <button
-        className="btn btn-secondary mb-3"
-        onClick={() => setView(view === 'list' ? 'calendar' : 'list')}
-      >
-        Switch to {view === 'list' ? 'Calendar' : 'List'} View
-      </button>
-      {view === 'list' ? (
+      {view === "calendar" ? (
+        <CalendarView
+          todos={todos}
+          onAdd={handleAddTodo}
+          onEdit={handleEditTodo}
+          onDelete={handleDeleteTodo}
+        />
+      ) : (
         <>
           <TodoForm onAdd={handleAddTodo} />
           <TodoList
-            todos={filteredTodos}
-            onToggle={handleToggleTodo}
+            todos={todos}
+            onToggle={(id) =>
+              handleEditTodo(id, {
+                ...todos.find((todo) => todo.id === id),
+                completed: !todos.find((todo) => todo.id === id).completed,
+              })
+            }
             onDelete={handleDeleteTodo}
-            onEdit={handleEditTodo}
-          />
-          <TodoFooter
-            count={filteredTodos.length}
-            filter={filter}
-            setFilter={setFilter}
-            onClearCompleted={handleClearCompleted}
           />
         </>
-      ) : (
-        <CalendarView todos={todos} />
       )}
+      <button
+        className="btn btn-secondary mt-3"
+        onClick={() => setView(view === "calendar" ? "list" : "calendar")}
+      >
+        Switch to {view === "calendar" ? "List" : "Calendar"} View
+      </button>
     </div>
   );
 }

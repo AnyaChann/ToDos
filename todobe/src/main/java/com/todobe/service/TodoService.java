@@ -2,6 +2,9 @@ package com.todobe.service;
 
 import com.todobe.model.ToDo;
 import com.todobe.repository.TodoRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +36,8 @@ public class TodoService {
         todo.setCompleted(todoDetails.isCompleted());
         return todoRepository.save(todo);
     }
-
+    
+    @Transactional
     public void deleteTodoById(Long id) {
         todoRepository.deleteById(id);
     }
